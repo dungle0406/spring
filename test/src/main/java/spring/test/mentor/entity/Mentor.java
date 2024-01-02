@@ -1,16 +1,21 @@
-package spring.test.mentor.module;
+package spring.test.mentor.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
+import spring.test.cohort.entity.Cohort;
+
+import java.io.Serializable;
 
 @Entity
 @Table(name = "mentors")
 @Getter
 @Setter
 @Accessors(chain = true)
-public class Mentor {
+@ToString
+public class Mentor implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -29,5 +34,12 @@ public class Mentor {
     private String team;
 
     @Column(name = "rating")
-    private String rating;
+    private Float rating;
+
+    @Column(name = "cohort_id")
+    private Long cohortId;
+
+    @ManyToOne()
+    @JoinColumn(name = "cohort_id", insertable = false, updatable = false)
+    private Cohort cohort;
 }

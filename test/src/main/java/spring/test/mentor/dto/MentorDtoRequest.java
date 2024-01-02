@@ -1,10 +1,15 @@
 package spring.test.mentor.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Column;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.io.Serializable;
+
 @Getter
+@Builder
 @ToString
 public class MentorDtoRequest {
     @JsonProperty("firstName")
@@ -20,5 +25,8 @@ public class MentorDtoRequest {
     private String team;
 
     @JsonProperty("rating")
-    private String rating;
+    private Float rating;
+
+    @JsonProperty("cohort_id")
+    private Long cohortId;
 }
