@@ -1,27 +1,18 @@
 package spring.test.mentor.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-//import spring.test.mentor.aop.LogAspect;
-import spring.test.mentor.aop.LogMessage;
+import spring.test.mentor.aop.MentorNotFoundException;
 import spring.test.mentor.dto.MentorDtoPutResponse;
 import spring.test.mentor.dto.MentorDtoRequest;
 import spring.test.mentor.dto.MentorDtoResponse;
 import spring.test.mentor.dto.MentorPostResponse;
-import spring.test.mentor.error.MentorNotFoundException;
 import spring.test.mentor.service.MentorService;
 
-import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/mentors")
@@ -58,16 +49,5 @@ public class MentorController {
     @DeleteMapping("/{id}")
     public void deleteMentorById(@PathVariable Long id) {
         mentorService.deleteMentorById(id);
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public LogMessage handleException(MethodArgumentNotValidException ex, HttpServletRequest request, HttpServletResponse response) {
-        log.error("Internal server error", ex);
-        return LogMessage.builder()
-                .path(request.getRequestURI())
-                .method(request.getMethod())
-                .time(Instant.now())
-                .responseStatusCode(response.getStatus())
-                .build();
     }
 }

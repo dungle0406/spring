@@ -7,13 +7,13 @@ import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import spring.test.cohort.error.CohortNotFoundException;
 import spring.test.cohort.service.CohortRepository;
+import spring.test.mentor.aop.MentorNotFoundException;
+import spring.test.mentor.aop.UsedIdBadRequest;
 import spring.test.mentor.dto.MentorDtoPutResponse;
 import spring.test.mentor.dto.MentorDtoRequest;
 import spring.test.mentor.dto.MentorDtoResponse;
 import spring.test.mentor.dto.MentorPostResponse;
 import spring.test.mentor.entity.Mentor;
-import spring.test.mentor.error.UsedIdBadRequest;
-import spring.test.mentor.error.MentorNotFoundException;
 
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class MentorService {
         }
 
         if (mentorRepository.existsByIdentificationNumber(request.getIdentificationNumber())) {
-            throw new UsedIdBadRequest();
+            throw new MentorNotFoundException();
         }
 
 //        if(!cohortRepository.existsById(request.getCohortId())) {
