@@ -11,13 +11,10 @@ import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 @Getter
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class LogMessage {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String path;
     private String method;
     private Instant time;
