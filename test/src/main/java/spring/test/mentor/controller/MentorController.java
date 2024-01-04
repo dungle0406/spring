@@ -5,7 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import spring.test.mentor.dto.MentorDtoPostResponse;
 import spring.test.mentor.dto.MentorDtoRequest;
+import spring.test.mentor.dto.MentorDtoResponse;
 import spring.test.mentor.service.MentorService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/mentors")
@@ -21,5 +24,10 @@ public class MentorController {
     @ResponseStatus(HttpStatus.CREATED)
     public MentorDtoPostResponse createNewMentor(@RequestBody MentorDtoRequest request) {
         return mentorService.createNewMentor(request);
+    }
+
+    @GetMapping
+    public List<MentorDtoResponse> findMentors(@ModelAttribute MentorDtoRequest request) {
+        return mentorService.findMentors(request);
     }
 }
