@@ -1,4 +1,4 @@
-package spring.test.actionlog;
+package spring.test.advice;
 
 import lombok.Getter;
 import org.springframework.stereotype.Service;
@@ -10,8 +10,7 @@ import java.util.List;
 @Service
 public class ActionLogService {
     private final List<ActionLog> logServices = new ArrayList<>();
-
-    public void addNewLogService(ActionLog logMessage) {
+    public void addNewActionLog(ActionLog logMessage) {
         logServices.add(logMessage);
     }
 }

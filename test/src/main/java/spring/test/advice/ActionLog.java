@@ -1,4 +1,4 @@
-package spring.test.actionlog;
+package spring.test.advice;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

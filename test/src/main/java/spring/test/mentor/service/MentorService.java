@@ -1,15 +1,15 @@
 package spring.test.mentor.service;
 
+import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
-import spring.test.cohort.error.CohortNotFoundException;
 import spring.test.cohort.service.CohortRepository;
-import spring.test.mentor.aop.MentorExceptionController;
-import spring.test.mentor.aop.MentorNotFoundException;
-import spring.test.mentor.aop.UsedIdBadRequest;
+import spring.test.mentor.error.InvalidRatingBadRequest;
+import spring.test.mentor.error.LackOfInformation;
+import spring.test.mentor.error.MentorNotFound;
 import spring.test.mentor.dto.MentorDtoPutResponse;
 import spring.test.mentor.dto.MentorDtoRequest;
 import spring.test.mentor.dto.MentorDtoResponse;
@@ -24,35 +24,35 @@ public class MentorService {
     private final MentorRepository mentorRepository;
     private final CohortRepository cohortRepository;
     private final MentorMapper mentorMapper;
-    private final MentorExceptionController mentorExceptionController;
 
     @Autowired
-    public MentorService(MentorRepository mentorRepository, CohortRepository cohortRepository, MentorMapper mentorMapper, MentorExceptionController mentorExceptionController) {
+    public MentorService(MentorRepository mentorRepository, CohortRepository cohortRepository, MentorMapper mentorMapper) {
         this.mentorRepository = mentorRepository;
         this.cohortRepository = cohortRepository;
         this.mentorMapper = mentorMapper;
-        this.mentorExceptionController = mentorExceptionController;
     }
 
     public MentorPostResponse createNewMentor(MentorDtoRequest request) {
         log.debug("Request: {}", request);
 
-        if (request.getRating() < 1 || request.getRating() > 5) {
-            throw new UsedIdBadRequest();
+        if (request.getRating() < 1f || request.getRating() > 5f) {
+            throw new InvalidRatingBadRequest();
         }
 
 //        if(!cohortRepository.existsById(request.getCohortId())) {
 //            throw new CohortNotFoundException();
 //        }
-
+//        if (!mentorRepository.findAll(Example.of(mentorMapper.mapMentorFromDtoRequest(request))).isEmpty()) {
+//            throw new UsedIdBadRequest();
+//        }
         Mentor mentor = mentorMapper.mapMentorFromDtoRequest(request);
         log.debug("Mentor Request: {}", mentor);
-        mentorRepository.save(mentor);
+            mentorRepository.save(mentor);
 
-        MentorPostResponse mentorPostResponse = mentorMapper.mapMentorPostResponseFromMentor(mentor);
-        log.debug("Response: {}", mentorPostResponse);
+            MentorPostResponse mentorPostResponse = mentorMapper.mapMentorPostResponseFromMentor(mentor);
+            log.debug("Response: {}", mentorPostResponse);
 
-        return mentorPostResponse;
+            return mentorPostResponse;
     }
 
     public List<MentorDtoResponse> findMentors(MentorDtoRequest request) {
@@ -72,7 +72,7 @@ public class MentorService {
     }
 
     public MentorDtoResponse findMentorById(Long id) {
-        Mentor mentor = mentorRepository.findById(id).orElseThrow(MentorNotFoundException::new);
+        Mentor mentor = mentorRepository.findById(id).orElseThrow(MentorNotFound::new);
         log.debug("Mentor Request: {}", mentor);
 
         return mentorMapper.mapDtoResponseFromMentor(mentor);
@@ -81,21 +81,21 @@ public class MentorService {
     public MentorDtoPutResponse modifyMentors(Long id, MentorDtoRequest request) {
         log.debug("Request: {}", request);
 
-        Mentor mentor = mentorRepository.findById(id).orElseThrow(MentorNotFoundException::new);
+        Mentor mentor = mentorRepository.findById(id).orElseThrow(MentorNotFound::new);
         log.debug("Mentor Request: {}", mentor);
 
         mentorMapper.updateMentorFromMentorDtoRequest(mentor, request);
         log.debug("Mentor Response: {}", mentor);
         mentorRepository.save(mentor);
 
-        MentorDtoPutResponse response = mentorMapper.mapDtoPutResponseFromMentor(mentorRepository.findById(id).orElseThrow(MentorNotFoundException::new));
+        MentorDtoPutResponse response = mentorMapper.mapDtoPutResponseFromMentor(mentorRepository.findById(id).orElseThrow(MentorNotFound::new));
         log.debug("Response: {}", response);
 
         return response;
     }
 
     public void deleteMentorById(Long id) {
-        Mentor mentor = mentorRepository.findById(id).orElseThrow(MentorNotFoundException::new);
+        Mentor mentor = mentorRepository.findById(id).orElseThrow(MentorNotFound::new);
         log.debug("Mentor Request: {}", mentor);
 
         mentorRepository.deleteById(id);

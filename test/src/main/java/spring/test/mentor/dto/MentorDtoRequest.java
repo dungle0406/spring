@@ -9,7 +9,6 @@ import lombok.ToString;
 import java.io.Serializable;
 
 @Getter
-@Builder
 @ToString
 public class MentorDtoRequest {
     @JsonProperty("firstName")

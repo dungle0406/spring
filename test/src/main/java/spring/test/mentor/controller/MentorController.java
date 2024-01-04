@@ -5,9 +5,10 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import spring.test.actionlog.ActionLog;
-import spring.test.actionlog.ActionLogService;
-import spring.test.mentor.aop.MentorNotFoundException;
+import spring.test.advice.ActionLog;
+import spring.test.advice.ActionLogService;
+import spring.test.mentor.error.LackOfInformation;
+import spring.test.mentor.error.MentorNotFound;
 import spring.test.mentor.dto.MentorDtoPutResponse;
 import spring.test.mentor.dto.MentorDtoRequest;
 import spring.test.mentor.dto.MentorDtoResponse;
@@ -31,7 +32,7 @@ public class MentorController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public MentorPostResponse createNewMentors(@RequestBody MentorDtoRequest mentorDtoRequest) throws BadRequestException {
+    public MentorPostResponse createNewMentors(@RequestBody MentorDtoRequest mentorDtoRequest) {
         return mentorService.createNewMentor(mentorDtoRequest);
     }
 
@@ -46,7 +47,7 @@ public class MentorController {
     }
 
     @PutMapping("/{id}")
-    public MentorDtoPutResponse modifyMentors(@PathVariable Long id, @RequestBody MentorDtoRequest mentorDtoRequest) throws MentorNotFoundException {
+    public MentorDtoPutResponse modifyMentors(@PathVariable Long id, @RequestBody MentorDtoRequest mentorDtoRequest) throws MentorNotFound {
         return mentorService.modifyMentors(id, mentorDtoRequest);
     }
 

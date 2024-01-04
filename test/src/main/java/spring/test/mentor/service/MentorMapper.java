@@ -6,6 +6,7 @@ import spring.test.mentor.dto.MentorDtoRequest;
 import spring.test.mentor.dto.MentorDtoResponse;
 import spring.test.mentor.dto.MentorPostResponse;
 import spring.test.mentor.entity.Mentor;
+import spring.test.mentor.error.LackOfInformation;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface MentorMapper {

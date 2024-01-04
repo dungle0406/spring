@@ -18,22 +18,23 @@ import java.io.Serializable;
 public class Mentor implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "firstName")
+    @Column(name = "firstName", nullable = false)
     private String firstName;
 
-    @Column(name = "lastName")
+    @Column(name = "lastName", nullable = false)
     private String lastName;
 
-    @Column(name = "identificationNumber", unique = true)
+    @Column(name = "identificationNumber", nullable = false, unique = true)
     private String identificationNumber;
 
-    @Column(name = "team")
+    @Column(name = "team", nullable = false)
     private String team;
 
-    @Column(name = "rating")
+    @Column(name = "rating", nullable = false)
     private Float rating;
 
     @Column(name = "cohort_id")
