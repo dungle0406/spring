@@ -4,27 +4,29 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import spring.test.actionlog.ActionLog;
+import spring.test.actionlog.ActionLogService;
 
 import java.time.Instant;
 
 @RestControllerAdvice
 public class MentorExceptionController {
-    private final LoggingService logService;
+    private final ActionLogService logService;
 
     @Autowired
-    public MentorExceptionController(LoggingService logService) {
+    public MentorExceptionController(ActionLogService logService) {
         this.logService = logService;
     }
 
-    @ExceptionHandler(MentorNotFoundException.class)
+    @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public LogMessage mentorNotFoundException(HttpServletRequest request) {
-        LogMessage logMessage = LogMessage.builder()
+    public ActionLog mentorNotFoundException(RuntimeException ex, HttpServletRequest request) {
+        ActionLog logMessage = ActionLog.builder()
                 .path(request.getRequestURI())
                 .method(request.getMethod())
                 .responseStatusCode(HttpStatus.NOT_FOUND.value())
                 .time(Instant.now())
-                .message("no mentor found in the database with the provided id")
+                .message(ex.getMessage())
                 .build();
 
         logService.addNewLogService(logMessage);
@@ -34,8 +36,8 @@ public class MentorExceptionController {
 
     @ExceptionHandler(UsedIdBadRequest.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public LogMessage usedIdNotFoundException(HttpServletRequest request) {
-        LogMessage logMessage = LogMessage.builder()
+    public ActionLog usedIdNotFoundException(HttpServletRequest request) {
+        ActionLog logMessage = ActionLog.builder()
                 .path(request.getRequestURI())
                 .method(request.getMethod())
                 .responseStatusCode(HttpStatus.BAD_REQUEST.value())
@@ -48,8 +50,8 @@ public class MentorExceptionController {
     }
 
     @ExceptionHandler(Exception.class)
-    public LogMessage globalExceptionHandler(HttpServletRequest request) {
-        LogMessage logMessage = LogMessage.builder()
+    public ActionLog globalExceptionHandler(HttpServletRequest request) {
+        ActionLog logMessage = ActionLog.builder()
                 .path(request.getRequestURI())
                 .method(request.getMethod())
                 .responseStatusCode(HttpStatus.METHOD_NOT_ALLOWED.value())

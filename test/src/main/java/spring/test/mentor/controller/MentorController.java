@@ -5,8 +5,8 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import spring.test.mentor.aop.LogMessage;
-import spring.test.mentor.aop.LoggingService;
+import spring.test.actionlog.ActionLog;
+import spring.test.actionlog.ActionLogService;
 import spring.test.mentor.aop.MentorNotFoundException;
 import spring.test.mentor.dto.MentorDtoPutResponse;
 import spring.test.mentor.dto.MentorDtoRequest;
@@ -21,10 +21,10 @@ import java.util.List;
 @Slf4j
 public class MentorController {
     private final MentorService mentorService;
-    private final LoggingService logService;
+    private final ActionLogService logService;
 
     @Autowired
-    public MentorController(MentorService mentorService, LoggingService logService) {
+    public MentorController(MentorService mentorService, ActionLogService logService) {
         this.mentorService = mentorService;
         this.logService = logService;
     }
@@ -56,7 +56,7 @@ public class MentorController {
     }
 
     @GetMapping("/log")
-    public List<LogMessage> getLogs() {
+    public List<ActionLog> getLogs() {
         return logService.getLogServices();
     }
 }

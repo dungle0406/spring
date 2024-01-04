@@ -27,7 +27,7 @@ public class Mentor implements Serializable {
     @Column(name = "lastName")
     private String lastName;
 
-    @Column(name = "identificationNumber")
+    @Column(name = "identificationNumber", unique = true)
     private String identificationNumber;
 
     @Column(name = "team")

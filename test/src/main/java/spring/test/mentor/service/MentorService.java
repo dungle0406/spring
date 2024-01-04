@@ -37,12 +37,8 @@ public class MentorService {
     public MentorPostResponse createNewMentor(MentorDtoRequest request) {
         log.debug("Request: {}", request);
 
-        if (request.getRating() < 1L || request.getRating() > 5L) {
+        if (request.getRating() < 1 || request.getRating() > 5) {
             throw new UsedIdBadRequest();
-        }
-
-        if (mentorRepository.existsByIdentificationNumber(request.getIdentificationNumber())) {
-            throw new MentorNotFoundException();
         }
 
 //        if(!cohortRepository.existsById(request.getCohortId())) {
@@ -63,9 +59,7 @@ public class MentorService {
         log.debug("Request: {}", request);
 
         List<Mentor> mentors = mentorRepository
-                .findAll(Example.of(mentorMapper.mapMentorFromDtoRequest(request)))
-                .stream()
-                .toList();
+                .findAll(Example.of(mentorMapper.mapMentorFromDtoRequest(request)));
         log.debug("Mentor Response: {}", mentors);
 
         List<MentorDtoResponse> responses = mentors

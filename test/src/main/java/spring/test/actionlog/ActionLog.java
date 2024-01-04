@@ -1,9 +1,5 @@
-package spring.test.mentor.aop;
+package spring.test.actionlog;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +10,7 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class LogMessage {
+public class ActionLog {
     private String path;
     private String method;
     private Instant time;
