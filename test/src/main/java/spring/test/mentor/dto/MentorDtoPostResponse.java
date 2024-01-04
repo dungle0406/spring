@@ -11,5 +11,5 @@ public class MentorDtoPostResponse {
     private Long id;
 
     @JsonProperty("givenRating")
-    private int rating;
+    private Float rating;
 }

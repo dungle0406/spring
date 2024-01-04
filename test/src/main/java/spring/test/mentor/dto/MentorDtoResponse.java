@@ -25,5 +25,5 @@ public class MentorDtoResponse {
     private String team;
 
     @JsonProperty( "rating")
-    private int rating;
+    private Float rating;
 }
