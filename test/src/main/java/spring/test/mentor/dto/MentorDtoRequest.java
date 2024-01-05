@@ -2,6 +2,7 @@ package spring.test.mentor.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -17,6 +18,7 @@ public class MentorDtoRequest {
     @JsonProperty("lastName")
     private String lastName;
 
+    @NotNull
     @JsonProperty("identificationNumber")
     private String identificationNumber;
 

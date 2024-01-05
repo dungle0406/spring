@@ -2,7 +2,10 @@ package spring.test.advice;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import spring.test.mentor.error.InvalidRatingBadRequest;
@@ -52,7 +55,7 @@ public class ActionLogExceptionController {
 
         return new ActionLogMessage(ex.getMessage());
     }
-    @ExceptionHandler({LackOfInformation.class})
+    @ExceptionHandler({LackOfInformation.class, ConstraintViolationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ActionLogMessage handleLackOfInformation(HttpServletRequest request, Exception ex) {
         ActionLog actionLog = ActionLog.builder()

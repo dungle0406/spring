@@ -1,11 +1,13 @@
 package spring.test.mentor.service;
 
 import jakarta.persistence.EntityManager;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import spring.test.cohort.service.CohortRepository;
 import spring.test.mentor.error.InvalidRatingBadRequest;
 import spring.test.mentor.error.LackOfInformation;
@@ -17,7 +19,9 @@ import spring.test.mentor.dto.MentorPostResponse;
 import spring.test.mentor.entity.Mentor;
 
 import java.util.List;
-
+import java.util.Objects;
+import java.util.stream.Stream;
+@Validated
 @Service
 @Slf4j
 public class MentorService {
@@ -32,8 +36,10 @@ public class MentorService {
         this.mentorMapper = mentorMapper;
     }
 
-    public MentorPostResponse createNewMentor(MentorDtoRequest request) {
+    public MentorPostResponse createNewMentor(@Valid MentorDtoRequest request) {
         log.debug("Request: {}", request);
+
+//        validate(request);
 
         if (request.getRating() < 1f || request.getRating() > 5f) {
             throw new InvalidRatingBadRequest();
@@ -53,6 +59,13 @@ public class MentorService {
             log.debug("Response: {}", mentorPostResponse);
 
             return mentorPostResponse;
+    }
+
+    private void validate(MentorDtoRequest request) {
+        boolean isValid = Stream.of(request.getRating(), request.getTeam())
+                .anyMatch(Objects::isNull);
+
+        if(!isValid) throw new RuntimeException();
     }
 
     public List<MentorDtoResponse> findMentors(MentorDtoRequest request) {
