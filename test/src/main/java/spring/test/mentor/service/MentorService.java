@@ -7,7 +7,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import spring.test.cohort.error.CohortNotFoundException;
 import spring.test.cohort.service.CohortRepository;
-import spring.test.mentor.aop.MentorExceptionController;
+//import spring.test.mentor.aop.MentorExceptionController;
 import spring.test.mentor.aop.MentorNotFoundException;
 import spring.test.mentor.aop.UsedIdBadRequest;
 import spring.test.mentor.dto.MentorDtoPutResponse;
@@ -24,14 +24,14 @@ public class MentorService {
     private final MentorRepository mentorRepository;
     private final CohortRepository cohortRepository;
     private final MentorMapper mentorMapper;
-    private final MentorExceptionController mentorExceptionController;
+//    private final MentorExceptionController mentorExceptionController;
 
     @Autowired
-    public MentorService(MentorRepository mentorRepository, CohortRepository cohortRepository, MentorMapper mentorMapper, MentorExceptionController mentorExceptionController) {
+    public MentorService(MentorRepository mentorRepository, CohortRepository cohortRepository, MentorMapper mentorMapper) {
         this.mentorRepository = mentorRepository;
         this.cohortRepository = cohortRepository;
         this.mentorMapper = mentorMapper;
-        this.mentorExceptionController = mentorExceptionController;
+//        this.mentorExceptionController = mentorExceptionController;
     }
 
     public MentorPostResponse createNewMentor(MentorDtoRequest request) {
