@@ -1,4 +1,4 @@
-package spring.test.advice;
+package spring.test.aop;
 
 import lombok.Getter;
 import org.springframework.stereotype.Service;

@@ -21,6 +21,7 @@ import spring.test.mentor.entity.Mentor;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
+
 @Validated
 @Service
 @Slf4j
@@ -36,36 +37,26 @@ public class MentorService {
         this.mentorMapper = mentorMapper;
     }
 
-    public MentorPostResponse createNewMentor(@Valid MentorDtoRequest request) {
+    public MentorPostResponse createNewMentor(@Valid MentorDtoRequest request) throws LackOfInformation {
         log.debug("Request: {}", request);
 
-//        validate(request);
+        if (Stream.of(request.getRating(), request.getTeam(), request.getLastName(), request.getFirstName(), request.getIdentificationNumber())
+                .anyMatch(Objects::isNull)) {
+            throw new LackOfInformation();
+        }
 
         if (request.getRating() < 1f || request.getRating() > 5f) {
             throw new InvalidRatingBadRequest();
         }
 
-//        if(!cohortRepository.existsById(request.getCohortId())) {
-//            throw new CohortNotFoundException();
-//        }
-//        if (!mentorRepository.findAll(Example.of(mentorMapper.mapMentorFromDtoRequest(request))).isEmpty()) {
-//            throw new UsedIdBadRequest();
-//        }
         Mentor mentor = mentorMapper.mapMentorFromDtoRequest(request);
         log.debug("Mentor Request: {}", mentor);
-            mentorRepository.save(mentor);
+        mentorRepository.save(mentor);
 
-            MentorPostResponse mentorPostResponse = mentorMapper.mapMentorPostResponseFromMentor(mentor);
-            log.debug("Response: {}", mentorPostResponse);
+        MentorPostResponse mentorPostResponse = mentorMapper.mapMentorPostResponseFromMentor(mentor);
+        log.debug("Response: {}", mentorPostResponse);
 
-            return mentorPostResponse;
-    }
-
-    private void validate(MentorDtoRequest request) {
-        boolean isValid = Stream.of(request.getRating(), request.getTeam())
-                .anyMatch(Objects::isNull);
-
-        if(!isValid) throw new RuntimeException();
+        return mentorPostResponse;
     }
 
     public List<MentorDtoResponse> findMentors(MentorDtoRequest request) {

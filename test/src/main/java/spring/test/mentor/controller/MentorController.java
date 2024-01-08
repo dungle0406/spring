@@ -1,12 +1,11 @@
 package spring.test.mentor.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import spring.test.advice.ActionLog;
-import spring.test.advice.ActionLogService;
+import spring.test.aop.ActionLog;
+import spring.test.aop.ActionLogService;
 import spring.test.mentor.error.LackOfInformation;
 import spring.test.mentor.error.MentorNotFound;
 import spring.test.mentor.dto.MentorDtoPutResponse;
@@ -22,17 +21,17 @@ import java.util.List;
 @Slf4j
 public class MentorController {
     private final MentorService mentorService;
-    private final ActionLogService logService;
+    private final ActionLogService actionLogService;
 
     @Autowired
-    public MentorController(MentorService mentorService, ActionLogService logService) {
+    public MentorController(MentorService mentorService, ActionLogService actionLogService) {
         this.mentorService = mentorService;
-        this.logService = logService;
+        this.actionLogService = actionLogService;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public MentorPostResponse createNewMentors(@RequestBody MentorDtoRequest mentorDtoRequest) {
+    public MentorPostResponse createNewMentors(@RequestBody MentorDtoRequest mentorDtoRequest) throws LackOfInformation {
         return mentorService.createNewMentor(mentorDtoRequest);
     }
 
@@ -58,6 +57,6 @@ public class MentorController {
 
     @GetMapping("/log")
     public List<ActionLog> getLogs() {
-        return logService.getLogServices();
+        return actionLogService.getLogServices();
     }
 }

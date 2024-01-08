@@ -1,15 +1,14 @@
-package spring.test.advice;
+package spring.test.aop;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.Instant;
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class ActionLog {
     private String path;
     private String method;
