@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import spring.test.aop.ActionLog;
 import spring.test.aop.ActionLogService;
-import spring.test.mentor.error.LackOfInformation;
 import spring.test.mentor.error.MentorNotFound;
 import spring.test.mentor.dto.MentorDtoPutResponse;
 import spring.test.mentor.dto.MentorDtoRequest;
@@ -31,7 +30,7 @@ public class MentorController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public MentorPostResponse createNewMentors(@RequestBody MentorDtoRequest mentorDtoRequest) throws LackOfInformation {
+    public MentorPostResponse createNewMentors(@RequestBody MentorDtoRequest mentorDtoRequest) throws Exception {
         return mentorService.createNewMentor(mentorDtoRequest);
     }
 

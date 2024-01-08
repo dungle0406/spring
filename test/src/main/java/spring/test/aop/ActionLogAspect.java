@@ -2,16 +2,13 @@ package spring.test.aop;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.antlr.v4.runtime.RuleContextWithAltNum;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import spring.test.mentor.dto.MentorDtoResponse;
 import spring.test.mentor.error.InvalidRatingBadRequest;
 import spring.test.mentor.error.LackOfInformation;
 
@@ -48,25 +45,23 @@ public class ActionLogAspect {
     }
 
     @AfterThrowing(value = "execution(* spring.test.mentor.service.MentorService.*(..))", throwing = "ex")
-    public Object handleLackOfInformation(RuntimeException ex) {
+    public Object handleExceptions(Throwable ex) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 
-        if (ex instanceof LackOfInformation) {
-            ActionLog actionLog = handleException(request, ex, HttpStatus.BAD_REQUEST);
-            actionLogService.addNewActionLog(actionLog);
-            log.debug(actionLog.toString());
-            return actionLog;
+        HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+
+        if(!(ex instanceof UnsupportedOperationException)) {
+            httpStatus = HttpStatus.BAD_REQUEST;
         }
 
-        if (ex instanceof InvalidRatingBadRequest) {
-            ActionLog actionLog = handleException(request, ex, HttpStatus.BAD_REQUEST);
-            actionLogService.addNewActionLog(actionLog);
-            log.debug(actionLog.toString());
-            return actionLog;
-        }
-        throw ex;
+        ActionLog actionLog = handleException(request, ex, httpStatus);
+        log.debug(actionLog.toString());
+        actionLogService.addNewActionLog(actionLog);
+        return actionLog;
     }
-    private ActionLog handleException(HttpServletRequest request, RuntimeException ex, HttpStatus httpStatus) {
+
+
+    private ActionLog handleException(HttpServletRequest request, Throwable ex, HttpStatus httpStatus) {
         return ActionLog.builder()
                 .path(request.getRequestURI())
                 .method(request.getMethod())
