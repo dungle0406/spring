@@ -1,16 +1,13 @@
 package spring.test.mentor.service;
 
-import jakarta.persistence.EntityManager;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import spring.test.cohort.service.CohortRepository;
 import spring.test.mentor.error.InvalidRatingBadRequest;
-import spring.test.mentor.error.LackOfInformation;
 import spring.test.mentor.error.MentorNotFound;
 import spring.test.mentor.dto.MentorDtoPutResponse;
 import spring.test.mentor.dto.MentorDtoRequest;

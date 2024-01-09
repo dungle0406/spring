@@ -1,13 +1,11 @@
 package spring.test.mentor.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import spring.test.advice.ActionLog;
 import spring.test.advice.ActionLogService;
-import spring.test.mentor.error.LackOfInformation;
 import spring.test.mentor.error.MentorNotFound;
 import spring.test.mentor.dto.MentorDtoPutResponse;
 import spring.test.mentor.dto.MentorDtoRequest;

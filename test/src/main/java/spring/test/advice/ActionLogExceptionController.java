@@ -1,15 +1,11 @@
 package spring.test.advice;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import spring.test.mentor.error.InvalidRatingBadRequest;
-import spring.test.mentor.error.LackOfInformation;
 import spring.test.mentor.error.MentorNotFound;
 
 import java.time.Instant;
@@ -43,21 +39,6 @@ public class ActionLogExceptionController {
     @ExceptionHandler({InvalidRatingBadRequest.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ActionLogMessage handleInvalidRatingBadRequest(HttpServletRequest request, RuntimeException ex) {
-        ActionLog actionLog = ActionLog.builder()
-                .path(request.getRequestURI())
-                .method(request.getMethod())
-                .responseStatusCode(HttpStatus.BAD_REQUEST.value())
-                .time(Instant.now())
-                .message(ex.getMessage())
-                .build();
-
-        actionLogService.addNewActionLog(actionLog);
-
-        return new ActionLogMessage(ex.getMessage());
-    }
-    @ExceptionHandler({LackOfInformation.class, ConstraintViolationException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ActionLogMessage handleLackOfInformation(HttpServletRequest request, Exception ex) {
         ActionLog actionLog = ActionLog.builder()
                 .path(request.getRequestURI())
                 .method(request.getMethod())
