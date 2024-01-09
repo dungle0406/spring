@@ -1,6 +1,5 @@
 package spring.test.mentor.service;
 
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -19,6 +18,7 @@ import spring.test.mentor.entity.Mentor;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
+@Validated
 @Service
 @Slf4j
 public class MentorService {
@@ -33,7 +33,7 @@ public class MentorService {
         this.mentorMapper = mentorMapper;
     }
 
-    public MentorPostResponse createNewMentor( MentorDtoRequest request) throws LackOfInformation, InvalidRatingBadRequest {
+    public MentorPostResponse createNewMentor(@Validated MentorDtoRequest request) throws LackOfInformation, InvalidRatingBadRequest {
         log.debug("Request: {}", request);
 
         if (Stream.of(request.getRating(), request.getTeam(), request.getLastName(), request.getFirstName(), request.getIdentificationNumber())
