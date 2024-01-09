@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import spring.test.advice.ActionLog;
+import spring.test.advice.ActionLogDetails;
 import spring.test.advice.ActionLogService;
 import spring.test.mentor.error.MentorNotFound;
 import spring.test.mentor.dto.MentorDtoPutResponse;
@@ -18,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/mentors")
 @Slf4j
+@ActionLogDetails
 public class MentorController {
     private final MentorService mentorService;
     private final ActionLogService logService;
