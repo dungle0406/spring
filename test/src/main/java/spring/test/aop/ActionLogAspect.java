@@ -1,18 +1,13 @@
 package spring.test.aop;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Component;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
-import org.springframework.web.bind.MissingServletRequestParameterException;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor;
+import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
 
 import java.time.Instant;
 
@@ -26,32 +21,30 @@ public class ActionLogAspect {
     public ActionLogAspect(ActionLogService actionLogService) {
         this.actionLogService = actionLogService;
     }
-    @AfterThrowing(value = "execution(* spring.test.mentor..*.*(..))", throwing = "ex")
-    public Object handleExceptions(Throwable ex) {
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 
-        HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+    @AfterThrowing(value = "execution(* spring.test.mentor.controller..*.*(..))", throwing = "ex")
+    public void handleExceptions(JoinPoint joinPoint, Throwable ex) {
+        log.debug("Exception caught: " + ex.toString());
 
-        if (ex instanceof HttpClientErrorException.MethodNotAllowed || ex instanceof HttpRequestMethodNotSupportedException) {
-            httpStatus = HttpStatus.METHOD_NOT_ALLOWED;
-        } else if (ex instanceof HttpMessageNotReadableException || ex instanceof MissingServletRequestParameterException) {
-            httpStatus = HttpStatus.BAD_REQUEST;
-        }
+        log.debug("Method Signature: " + joinPoint.getSignature());
+        log.debug("Exception Message: " + ex.getMessage());
 
-        ActionLog actionLog = handleException(request, ex, httpStatus);
-        log.debug(actionLog.toString());
-        actionLogService.addNewActionLog(actionLog);
-        return actionLog;
+        ActionLog logMessage = createLogMessage(joinPoint, ex);
+        actionLogService.addNewActionLog(logMessage);
     }
 
+    private ActionLog createLogMessage(JoinPoint joinPoint, Throwable ex) {
+        String methodName = joinPoint.getSignature().getName();
+        String className = joinPoint.getTarget().getClass().getName();
 
-    private ActionLog handleException(HttpServletRequest request, Throwable ex, HttpStatus httpStatus) {
+        String logMessage = "Exception in method " + className + "." + methodName;
+
+
         return ActionLog.builder()
-                .path(request.getRequestURI())
-                .method(request.getMethod())
-                .responseStatusCode(httpStatus.value())
+                .path(className)
+                .method(methodName)
                 .time(Instant.now())
-                .message(ex.getMessage())
-                .build();
-    }
+                .responseStatusCode(500)
+                .message(logMessage)
+                .build();    }
 }
